@@ -138,16 +138,16 @@ int main(void) {
         key_press(KEY_DOWN,     GAMEPAD_DOWN_ON);
         key_press(KEY_LEFT,     GAMEPAD_LEFT_ON);
         key_press(KEY_RIGHT,    GAMEPAD_RIGHT_ON);
-        key_press(KEY_1,        GAMEPAD_CIRCLE_ON);
+        key_press(KEY_1,        GAMEPAD_SQUARE_ON);
         key_press(KEY_2,        GAMEPAD_CROSS_ON);
-        key_press(KEY_3,        GAMEPAD_TRIANGLE_ON);
-        key_press(KEY_4,        GAMEPAD_SQUARE_ON);
+        key_press(KEY_3,        GAMEPAD_CIRCLE_ON);
+        key_press(KEY_4,        GAMEPAD_TRIANGLE_ON);
         key_press(KEY_5,        GAMEPAD_L1_ON);
         key_press(KEY_6,        GAMEPAD_R1_ON);
         key_press(KEY_7,        GAMEPAD_L2_ON);
         key_press(KEY_8,        GAMEPAD_R2_ON);
-        key_press(KEY_9,        GAMEPAD_START_ON);
-        key_press(KEY_0,        GAMEPAD_SELECT_ON);
+        key_press(KEY_9,        GAMEPAD_SELECT_ON);
+        key_press(KEY_0,        GAMEPAD_START_ON);
         key_press(KEY_HOME,     GAMEPAD_PS_ON);
 
 		usb_keyboard_send();
