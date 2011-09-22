@@ -41,12 +41,12 @@
 
 
 # Target file name (without extension).
-TARGET = gamepad
+TARGET = keyboard
 
 
 # List C source files here. (C dependencies are automatically generated.)
 SRC =	$(TARGET).c \
-	usb_gamepad.c
+	usb_keyboard.c
 
 
 # MCU name, you MUST set this to match the board you are using
@@ -107,7 +107,7 @@ DEBUG = dwarf-2
 #     Each directory must be seperated by a space.
 #     Use forward slashes for directory separators.
 #     For a directory that has spaces, enclose it in quotes.
-EXTRAINCDIRS =
+EXTRAINCDIRS = ../inc
 
 
 # Compiler flag to set the C Standard level.

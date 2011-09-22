@@ -44,7 +44,7 @@
 
 #include <avr/io.h>
 #include <util/delay.h>
-#include "usb_gamepad.h"
+#include "usb_keyboard.h"
 #include "reboot.h"
 
 #if defined(SNES)
@@ -60,6 +60,47 @@
 #define LED_ON	(PORTD |= (1<<6))
 
 #define CPU_PRESCALE(n)	(CLKPR = 0x80, CLKPR = (n))
+
+/**********************************************************
+ * keyboard
+ */
+
+uint8_t keymask;
+
+void key_press(uint8_t key, uint8_t press) {
+    // check if key is already in array
+    int i;
+    for (i = 0; i < 6; i++) {
+        if (key == keyboard_keys[i])
+            break;
+    }
+    // if key is in array and it is released, update array value
+    if (i < 6 && !press) {
+        // remove value
+        keyboard_keys[i] = 0;
+    // if key is pressed and there is space in the array, add value to array
+    } else if (press && keymask) {
+        // find avail index
+        for (i = 0; i < 6; i++) {
+            if (keymask & (1 << i)) {
+                // set value
+                keyboard_keys[i] = key;
+                // remove from keymask
+                keymask &= ~(1 << i);
+            }
+        }
+    }
+}
+
+void usb_keyboard_reset_state(void) {
+    // set keymask bit high if keyboard_keys[] is unused
+    keymask = 0;
+    for (int i = 0; i < 6; i++) {
+        if (keyboard_keys[i] == 0) {
+            keymask |= (1 << i);
+        }
+    }
+}
 
 int main(void) {
 	// set for 16 MHz clock
@@ -84,91 +125,31 @@ int main(void) {
 	LED_OFF;
 
 	while (1) {
-		usb_gamepad_reset_state();
+		usb_keyboard_reset_state();
 
         // read gamepad data
         gamepad_read();
 
-        if (BTN_REBOOT_ON)
+        if (GAMEPAD_REBOOT_ON)
             reboot();
 
-		if (JOYSTICK_UP_ON) {
-			gamepad_state.direction = 0;
-			if (JOYSTICK_LEFT_ON) {
-				gamepad_state.direction = 7;
-			} else if (JOYSTICK_RIGHT_ON) {
-				gamepad_state.direction = 1;
-			}
-		} else {
-			if (JOYSTICK_DOWN_ON) {
-				gamepad_state.direction = 4;
-				if (JOYSTICK_LEFT_ON) {
-					gamepad_state.direction = 5;
-				} else if (JOYSTICK_RIGHT_ON) {
-					gamepad_state.direction = 3;
-				}
-			} else {
-				if (JOYSTICK_LEFT_ON) {
-					gamepad_state.direction = 6;
-				} else if (JOYSTICK_RIGHT_ON) {
-					gamepad_state.direction = 2;
-				}
-			}
-		}
+        key_press(KEY_A,            GAMEPAD_CIRCLE_ON);
+        key_press(KEY_B,            GAMEPAD_CROSS_ON);
+        key_press(KEY_X,            GAMEPAD_TRIANGLE_ON);
+        key_press(KEY_Y,            GAMEPAD_SQUARE_ON);
+        key_press(KEY_LEFT_CTRL,    GAMEPAD_L1_ON);
+        key_press(KEY_RIGHT_CTRL,   GAMEPAD_R1_ON);
+        key_press(KEY_LEFT_SHIFT,   GAMEPAD_L1_ON);
+        key_press(KEY_RIGHT_SHIFT,  GAMEPAD_L1_ON);
+        key_press(KEY_UP,           GAMEPAD_UP_ON);
+        key_press(KEY_DOWN,         GAMEPAD_DOWN_ON);
+        key_press(KEY_LEFT,         GAMEPAD_LEFT_ON);
+        key_press(KEY_RIGHT,        GAMEPAD_RIGHT_ON);
+        key_press(KEY_ENTER,        GAMEPAD_START_ON);
+        key_press(KEY_TAB,          GAMEPAD_SELECT_ON);
+        key_press(KEY_HOME,         GAMEPAD_PS_ON);
 
-		if (BTN_CROSS_ON) {
-			gamepad_state.cross_btn = 1;
-			gamepad_state.cross_axis = 0xff;
-		}
-
-		if (BTN_SQUARE_ON) {
-			gamepad_state.square_btn = 1;
-			gamepad_state.square_axis = 0xff;
-		}
-
-		if (BTN_TRIANGLE_ON) {
-			gamepad_state.triangle_btn = 1;
-			gamepad_state.triangle_axis = 0xff;
-		}
-
-		if (BTN_CIRCLE_ON) {
-			gamepad_state.circle_btn = 1;
-			gamepad_state.circle_axis = 0xff;
-		}
-
-		if (BTN_R1_ON) {
-			gamepad_state.r1_btn = 1;
-			gamepad_state.r1_axis = 0xff;
-		}
-
-		if (BTN_R2_ON) {
-			gamepad_state.r2_btn = 1;
-			gamepad_state.r2_axis = 0xff;
-		}
-
-		if (BTN_L1_ON) {
-			gamepad_state.l1_btn = 1;
-			gamepad_state.l1_axis = 0xff;
-		}
-
-		if (BTN_L2_ON) {
-			gamepad_state.l2_btn = 1;
-			gamepad_state.l2_axis = 0xff;
-		}
-
-		if (BTN_START_ON) {
-			gamepad_state.start_btn = 1;
-		}
-
-		if (BTN_SELECT_ON) {
-			gamepad_state.select_btn = 1;
-		}
-
-		if (BTN_PS_ON) {
-			gamepad_state.ps_btn = 1;
-		}
-
-		usb_gamepad_send();
+		usb_keyboard_send();
 	}
 }
 

@@ -2,7 +2,8 @@
 #ifndef _SNES_H_
 #define _SNES_H_
 
-/* snes.h
+/**********************************************************
+ * snes.h
  * John Burkert (johnburkert@gmail.com)
  *
  * The following websites were used as references for this project.
@@ -32,8 +33,9 @@
  * THE SOFTWARE.
  */
 
-///////////////////////////////////////////////////////////
-// snes button masks and defines
+/**********************************************************
+ * snes button masks and defines
+ */
 
 uint8_t BUTTON = 0;
 uint8_t DPAD = 0;
@@ -58,36 +60,52 @@ uint8_t VIRTUAL = 0;
 #define VIRTUAL_L2      (1 << 3)
 #define VIRTUAL_R2      (1 << 4)
 
-///////////////////////////////////////////////////////////
-// gamepad.c defines
+/**********************************************************
+ * gamepad button defines
+ */
 
-#define BTN_CIRCLE_ON	    (BUTTON & BUTTON_A)
-#define BTN_CROSS_ON	    (BUTTON & BUTTON_B)
-#define BTN_TRIANGLE_ON	    (BUTTON & BUTTON_X)
-#define BTN_SQUARE_ON	    (BUTTON & BUTTON_Y)
+#define GAMEPAD_CIRCLE_ON	    (BUTTON & BUTTON_A)
+#define GAMEPAD_CROSS_ON	    (BUTTON & BUTTON_B)
+#define GAMEPAD_TRIANGLE_ON	    (BUTTON & BUTTON_X)
+#define GAMEPAD_SQUARE_ON	    (BUTTON & BUTTON_Y)
 
-#define BTN_L1_ON	        (BUTTON & BUTTON_L1)
-#define BTN_R1_ON	        (BUTTON & BUTTON_R1)
-#define BTN_L2_ON	        (VIRTUAL & VIRTUAL_L2)
-#define BTN_R2_ON	        (VIRTUAL & VIRTUAL_R2)
+#define GAMEPAD_L1_ON	        (BUTTON & BUTTON_L1)
+#define GAMEPAD_R1_ON	        (BUTTON & BUTTON_R1)
+#define GAMEPAD_L2_ON	        (VIRTUAL & VIRTUAL_L2)
+#define GAMEPAD_R2_ON	        (VIRTUAL & VIRTUAL_R2)
 
-#define JOYSTICK_UP_ON	    (DPAD & DPAD_UP)
-#define JOYSTICK_DOWN_ON	(DPAD & DPAD_DOWN)
-#define JOYSTICK_LEFT_ON	(DPAD & DPAD_LEFT)
-#define JOYSTICK_RIGHT_ON	(DPAD & DPAD_RIGHT)
+#define GAMEPAD_UP_ON	        (DPAD & DPAD_UP)
+#define GAMEPAD_DOWN_ON	        (DPAD & DPAD_DOWN)
+#define GAMEPAD_LEFT_ON         (DPAD & DPAD_LEFT)
+#define GAMEPAD_RIGHT_ON	    (DPAD & DPAD_RIGHT)
 
-#define BTN_START_ON		(BUTTON & BUTTON_START)
-#define BTN_SELECT_ON	    (BUTTON & BUTTON_SELECT)
+#define GAMEPAD_START_ON		(BUTTON & BUTTON_START)
+#define GAMEPAD_SELECT_ON	    (BUTTON & BUTTON_SELECT)
 
-#define BTN_PS_ON		    (VIRTUAL & VIRTUAL_PS)
-#define BTN_REBOOT_ON	    (VIRTUAL & VIRTUAL_REBOOT)
+#define GAMEPAD_PS_ON		    (VIRTUAL & VIRTUAL_PS)
+#define GAMEPAD_REBOOT_ON	    (VIRTUAL & VIRTUAL_REBOOT)
 
-///////////////////////////////////////////////////////////
-// snes pins
+/**********************************************************
+ * snes pinout
+ *
+ * -----
+ * | 1 | VCC (white)    --->    VCC
+ * | 2 | Clock (yellow) --->    PB0
+ * | 3 | Latch (orange) --->    PB1
+ * | 4 | Data (red)     --->    PB2
+ * | 5 | empty
+ * | 6 | empty
+ * \ 7 / GND (brown)    --->    GND
+ *  ---
+ */
 
 #define CLOCK   (1 << 0)
 #define LATCH   (1 << 1)
 #define DATA    (1 << 2)
+
+/**********************************************************
+ * initialize pins
+ */ 
 
 void gamepad_init(void) {
     DDRB |= CLOCK;  // output
@@ -98,6 +116,10 @@ void gamepad_init(void) {
     PORTB |= LATCH; // high output
     PORTB &= ~DATA; // normal input
 }
+
+/**********************************************************
+ * read pins and set buttons masks
+ */ 
 
 void gamepad_read(void) {
     // set latch low
@@ -127,9 +149,9 @@ void gamepad_read(void) {
     // l2       : select + l1
     // r2       : select + r1
     VIRTUAL = 0;
-    if (BTN_SELECT_ON) {
-        if (BTN_START_ON) {
-            if (BTN_L1_ON && BTN_R1_ON) {
+    if (GAMEPAD_SELECT_ON) {
+        if (GAMEPAD_START_ON) {
+            if (GAMEPAD_L1_ON && GAMEPAD_R1_ON) {
                 // reboot
                 VIRTUAL = VIRTUAL_REBOOT;
                 // eat buttons
@@ -144,14 +166,14 @@ void gamepad_read(void) {
             BUTTON &= ~BUTTON_START;
             BUTTON &= ~BUTTON_SELECT;
         } else {
-            if (BTN_L1_ON) {
+            if (GAMEPAD_L1_ON) {
                 // l2
                 VIRTUAL |= VIRTUAL_L2;
                 // eat buttons
                 BUTTON &= ~BUTTON_L1;
                 BUTTON &= ~BUTTON_SELECT;
             }
-            if (BTN_R1_ON) {
+            if (GAMEPAD_R1_ON) {
                 // r2
                 VIRTUAL |= VIRTUAL_R2;
                 // eat buttons

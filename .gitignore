@@ -3,3 +3,14 @@
 .*.*.swp
 *.*~
 *.bak
+*.dep/
+*~
+*.eep
+*.elf
+*.lss
+*.lst
+*.map
+*.o
+*.sym
+gamepad.hex
+keyboard.hex
