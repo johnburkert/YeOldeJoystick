@@ -11,7 +11,7 @@
  *
  *   http://www.artlum.com/gameduino/nes.html
  *   http://pinouts.ru/Game/snescontroller_pinout.shtml
- *   http://www.slashdev.ca/2010/05/22/simple-6-button-ps3-gamepad/
+ *   http://www.slashdev.ca/2010/05/25/ps3-gamepad-with-home-button/
  *   http://www.pjrc.com/teensy/index.html
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
