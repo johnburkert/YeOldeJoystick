@@ -134,21 +134,46 @@ int main(void) {
         if (GAMEPAD_REBOOT_ON)
             reboot();
 
-        key_press(KEY_UP,       GAMEPAD_UP_ON);
-        key_press(KEY_DOWN,     GAMEPAD_DOWN_ON);
-        key_press(KEY_LEFT,     GAMEPAD_LEFT_ON);
-        key_press(KEY_RIGHT,    GAMEPAD_RIGHT_ON);
-        key_press(KEY_1,        GAMEPAD_SQUARE_ON);
-        key_press(KEY_2,        GAMEPAD_CROSS_ON);
-        key_press(KEY_3,        GAMEPAD_CIRCLE_ON);
-        key_press(KEY_4,        GAMEPAD_TRIANGLE_ON);
-        key_press(KEY_5,        GAMEPAD_L1_ON);
-        key_press(KEY_6,        GAMEPAD_R1_ON);
-        key_press(KEY_7,        GAMEPAD_L2_ON);
-        key_press(KEY_8,        GAMEPAD_R2_ON);
-        key_press(KEY_9,        GAMEPAD_SELECT_ON);
-        key_press(KEY_0,        GAMEPAD_START_ON);
-        key_press(KEY_HOME,     GAMEPAD_PS_ON);
+#if defined(MAME_P2)
+#warning "PLAYER 2"
+        //        KEY               GAMEPAD                    MAME
+        key_press(KEY_R,            GAMEPAD_UP_ON);         // UP
+        key_press(KEY_F,            GAMEPAD_DOWN_ON);       // DOWN
+        key_press(KEY_D,            GAMEPAD_LEFT_ON);       // LEFT
+        key_press(KEY_G,            GAMEPAD_RIGHT_ON);      // RIGHT
+        key_press(KEY_A,            GAMEPAD_CROSS_ON);      // SWITCH 1
+        key_press(KEY_S,            GAMEPAD_CIRCLE_ON);     // SWITCH 2
+        key_press(KEY_Q,            GAMEPAD_SQUARE_ON);     // SWITCH 3
+        key_press(KEY_W,            GAMEPAD_TRIANGLE_ON);   // SWITCH 4
+        key_press(KEY_I,            GAMEPAD_L1_ON);         // SWITCH 5
+        key_press(KEY_J,            GAMEPAD_R1_ON);         // SWITCH 6
+        key_press(KEY_K,            GAMEPAD_L2_ON);         // SWITCH 7
+        key_press(KEY_L,            GAMEPAD_R2_ON);         // SWITCH 8
+        key_press(KEY_2,            GAMEPAD_START_ON);      // START
+        key_press(KEY_6,            GAMEPAD_PS_ON);         // COIN IN
+#else
+#warning "PLAYER 1"
+        //        KEY               GAMEPAD                    MAME
+        key_press(KEY_UP,           GAMEPAD_UP_ON);         // UP
+        key_press(KEY_DOWN,         GAMEPAD_DOWN_ON);       // DOWN
+        key_press(KEY_LEFT,         GAMEPAD_LEFT_ON);       // LEFT
+        key_press(KEY_RIGHT,        GAMEPAD_RIGHT_ON);      // RIGHT
+      //key_press(KEY_LEFT_CTRL,    GAMEPAD_CROSS_ON);      // SWITCH 1
+      //key_press(KEY_LEFT_ALT,     GAMEPAD_CIRCLE_ON);     // SWITCH 2
+        key_press(KEY_SPACE,        GAMEPAD_SQUARE_ON);     // SWITCH 3
+      //key_press(KEY_LEFT_SHIFT,   GAMEPAD_TRIANGLE_ON);   // SWITCH 4
+        key_press(KEY_Z,            GAMEPAD_L1_ON);         // SWITCH 5
+        key_press(KEY_X,            GAMEPAD_R1_ON);         // SWITCH 6
+        key_press(KEY_C,            GAMEPAD_L2_ON);         // SWITCH 7
+        key_press(KEY_V,            GAMEPAD_R2_ON);         // SWITCH 8
+        key_press(KEY_1,            GAMEPAD_START_ON);      // START
+        key_press(KEY_5,            GAMEPAD_PS_ON);         // COIN IN
+
+        keyboard_modifier_keys = 0;
+        keyboard_modifier_keys |= (GAMEPAD_CROSS_ON) ? KEY_LEFT_CTRL : 0;
+        keyboard_modifier_keys |= (GAMEPAD_CIRCLE_ON) ? KEY_LEFT_ALT : 0;
+        keyboard_modifier_keys |= (GAMEPAD_TRIANGLE_ON) ? KEY_LEFT_SHIFT : 0;
+#endif
 
 		usb_keyboard_send();
 	}

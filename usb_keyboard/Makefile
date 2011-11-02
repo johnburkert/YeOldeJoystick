@@ -136,6 +136,10 @@ CPPDEFS = -DF_CPU=$(F_CPU)UL
 CDEFS += -D$(GAMEPAD)
 CPPDEFS += -D$(GAMEPAD)
 
+# player 1 or 2
+CDEFS += -D$(PLAYER)
+CPPDEFS += -D$(PLAYER)
+
 #---------------- Compiler Options C ----------------
 #  -g*:          generate debugging information
 #  -O*:          optimization level
